@@ -1,5 +1,9 @@
 package com.java8.practice.methodreference;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+
 public class MethodReferenceTest {
 	
 	public MethodReferenceTest() {
@@ -31,7 +35,7 @@ public class MethodReferenceTest {
 			System.out.println("Thread is running....");
 			for(int i=0;i<5;i++)
 			{
-				System.out.println("Thread number"+i+1);
+				System.out.println("Thread number"+(i+1));
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -48,7 +52,7 @@ public class MethodReferenceTest {
 			System.out.println("Thread is running....");
 			for(int i=0;i<5;i++)
 			{
-				System.out.println("Instance Ref Thread number"+i+1);
+				System.out.println("Instance Ref Thread number"+(i+1));
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -66,8 +70,9 @@ public class MethodReferenceTest {
 			 * **Points to remember**
 			 *1. Static methods can be used as method reference e. ClasssName::staticMethodName
 			 *2. Number of method argument in interface function and function which will be refereed should be same
-			 *3. Return type and modifiers can be different.
-			 *4. Instance Method can be used as method reference
+			 *3. Return Type should be same
+			 *4. Modifiers can be different.
+			 *5. Instance Method can be used as method reference
 			 */
 			FuncInterface f = EmployeeName::sayStudentName;
 			f.sayHello();
@@ -78,6 +83,23 @@ public class MethodReferenceTest {
 			 */
 			Thread t = new Thread(MethodReferenceTest::displayThreadCount);
 			t.start();
+			
+			/*
+			 * Implementing constructor reference with callable interface, callable.call() method with return object
+			 * now with that object  we are calling instance method
+			 */
+			
+			//Callable<MethodReferenceTest> call=MethodReferenceTest::new;
+			FutureTask<MethodReferenceTest> futureTask = new FutureTask<MethodReferenceTest>(MethodReferenceTest::new);
+			Thread t1=new Thread(futureTask);
+			t1.start();
+			
+			try {
+				futureTask.get().instanceReferenceThread();
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		}
 
